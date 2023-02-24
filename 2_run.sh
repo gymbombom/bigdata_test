@@ -4,6 +4,7 @@
 #define
 LOGSTASH_DIR_NAME="logstash-8.6.0"
 KAFKA_DIR_NAME="kafka_2.13-3.3.1"
+HADOOP_DIR_NAME="hadoop-3.3.4"
 
 ######################################################################################
 # logstash
@@ -34,3 +35,12 @@ docker exec hadoop1 /bin/bash -c "source /root/.bashrc; /root/$KAFKA_DIR_NAME/bi
 docker exec hadoop1 /bin/bash -c "source /root/.bashrc; /root/$KAFKA_DIR_NAME/bin/kafka-topics.sh --list --bootstrap-server 192.168.101.11:9092,192.168.101.12:9092,192.168.101.13:9092,192.168.101.14:9092,192.168.101.15:9092"
 
 ######################################################################################
+# hadoop
+
+docker exec hadoop1 /bin/bash -c "source /root/.bashrc; /root/$HADOOP_DIR_NAME/bin/hdfs namenode -format;"
+
+docker exec hadoop1 /bin/bash -c "source /root/.bashrc; /root/$HADOOP_DIR_NAME/sbin/start-all.sh;"
+docker exec hadoop2 /bin/bash -c "source /root/.bashrc; /root/$HADOOP_DIR_NAME/sbin/start-all.sh;"
+docker exec hadoop3 /bin/bash -c "source /root/.bashrc; /root/$HADOOP_DIR_NAME/sbin/start-all.sh;"
+docker exec hadoop4 /bin/bash -c "source /root/.bashrc; /root/$HADOOP_DIR_NAME/sbin/start-all.sh;"
+docker exec hadoop5 /bin/bash -c "source /root/.bashrc; /root/$HADOOP_DIR_NAME/sbin/start-all.sh;"

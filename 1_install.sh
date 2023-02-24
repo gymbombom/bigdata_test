@@ -4,6 +4,7 @@
 #define
 LOGSTASH_DIR_NAME="logstash-8.6.0"
 KAFKA_DIR_NAME="kafka_2.13-3.3.1"
+HADOOP_DIR_NAME="hadoop-3.3.4"
 
 ######################################################################################
 #sshd 설정
@@ -55,39 +56,64 @@ docker exec hadoop1 /bin/bash -c "sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.p
                                sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.101.14; \
                                sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.101.15;
                               "
+docker exec hadoop2 /bin/bash -c "sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.101.11;  \
+                               sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.101.12; \
+                               sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.101.13; \
+                               sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.101.14; \
+                               sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.101.15;
+                              "
+docker exec hadoop3 /bin/bash -c "sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.101.11;  \
+                               sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.101.12; \
+                               sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.101.13; \
+                               sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.101.14; \
+                               sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.101.15;
+                              "
+docker exec hadoop4 /bin/bash -c "sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.101.11;  \
+                               sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.101.12; \
+                               sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.101.13; \
+                               sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.101.14; \
+                               sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.101.15;
+                              "
+docker exec hadoop5 /bin/bash -c "sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.101.11;  \
+                               sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.101.12; \
+                               sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.101.13; \
+                               sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.101.14; \
+                               sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.101.15;
+                              "                                                            
+
 ######################################################################################
 # host파일 설정
 
 docker exec hadoop1 /bin/bash -c "echo '' >> /etc/hosts; \
-			       echo '192.168.101.11  hes1' >> /etc/hosts; \
-			       echo '192.168.101.12  hes2' >> /etc/hosts; \
-			       echo '192.168.101.13  hes3' >> /etc/hosts; \
-			       echo '192.168.101.14  hes4' >> /etc/hosts; \
-			       echo '192.168.101.15  hes5' >> /etc/hosts;" 
+			       echo '192.168.101.11  hadoop1' >> /etc/hosts; \
+			       echo '192.168.101.12  hadoop2' >> /etc/hosts; \
+			       echo '192.168.101.13  hadoop3' >> /etc/hosts; \
+			       echo '192.168.101.14  hadoop4' >> /etc/hosts; \
+			       echo '192.168.101.15  hadoop5' >> /etc/hosts;" 
 docker exec hadoop2 /bin/bash -c "echo '' >> /etc/hosts; \
-                               echo '192.168.101.11  hes1' >> /etc/hosts; \
-                               echo '192.168.101.12  hes2' >> /etc/hosts; \
-                               echo '192.168.101.13  hes3' >> /etc/hosts; \
-                               echo '192.168.101.14  hes4' >> /etc/hosts; \
-                               echo '192.168.101.15  hes5' >> /etc/hosts;"
+                               echo '192.168.101.11  hadoop1' >> /etc/hosts; \
+                               echo '192.168.101.12  hadoop2' >> /etc/hosts; \
+                               echo '192.168.101.13  hadoop3' >> /etc/hosts; \
+                               echo '192.168.101.14  hadoop4' >> /etc/hosts; \
+                               echo '192.168.101.15  hadoop5' >> /etc/hosts;"
 docker exec hadoop3 /bin/bash -c "echo '' >> /etc/hosts; \
-                               echo '192.168.101.11  hes1' >> /etc/hosts; \
-                               echo '192.168.101.12  hes2' >> /etc/hosts; \
-                               echo '192.168.101.13  hes3' >> /etc/hosts; \
-                               echo '192.168.101.14  hes4' >> /etc/hosts; \
-                               echo '192.168.101.15  hes5' >> /etc/hosts;"
+                               echo '192.168.101.11  hadoop1' >> /etc/hosts; \
+                               echo '192.168.101.12  hadoop2' >> /etc/hosts; \
+                               echo '192.168.101.13  hadoop3' >> /etc/hosts; \
+                               echo '192.168.101.14  hadoop4' >> /etc/hosts; \
+                               echo '192.168.101.15  hadoop5' >> /etc/hosts;"
 docker exec hadoop4 /bin/bash -c "echo '' >> /etc/hosts; \
-                               echo '192.168.101.11  hes1' >> /etc/hosts; \
-                               echo '192.168.101.12  hes2' >> /etc/hosts; \
-                               echo '192.168.101.13  hes3' >> /etc/hosts; \
-                               echo '192.168.101.14  hes4' >> /etc/hosts; \
-                               echo '192.168.101.15  hes5' >> /etc/hosts;"
+                               echo '192.168.101.11  hadoop1' >> /etc/hosts; \
+                               echo '192.168.101.12  hadoop2' >> /etc/hosts; \
+                               echo '192.168.101.13  hadoop3' >> /etc/hosts; \
+                               echo '192.168.101.14  hadoop4' >> /etc/hosts; \
+                               echo '192.168.101.15  hadoop5' >> /etc/hosts;"
 docker exec hadoop5 /bin/bash -c "echo '' >> /etc/hosts; \
-                               echo '192.168.101.11  hes1' >> /etc/hosts; \
-                               echo '192.168.101.12  hes2' >> /etc/hosts; \
-                               echo '192.168.101.13  hes3' >> /etc/hosts; \
-                               echo '192.168.101.14  hes4' >> /etc/hosts; \
-                               echo '192.168.101.15  hes5' >> /etc/hosts;"
+                               echo '192.168.101.11  hadoop1' >> /etc/hosts; \
+                               echo '192.168.101.12  hadoop2' >> /etc/hosts; \
+                               echo '192.168.101.13  hadoop3' >> /etc/hosts; \
+                               echo '192.168.101.14  hadoop4' >> /etc/hosts; \
+                               echo '192.168.101.15  hadoop5' >> /etc/hosts;"
 
 ######################################################################################                               
 # logstash 설정
@@ -172,3 +198,49 @@ docker exec hadoop2 /bin/bash -c "echo 2 > /root/$KAFKA_DIR_NAME/data/zookeeper/
 docker exec hadoop3 /bin/bash -c "echo 3 > /root/$KAFKA_DIR_NAME/data/zookeeper/myid;"
 docker exec hadoop4 /bin/bash -c "echo 4 > /root/$KAFKA_DIR_NAME/data/zookeeper/myid;"
 docker exec hadoop5 /bin/bash -c "echo 5 > /root/$KAFKA_DIR_NAME/data/zookeeper/myid;"
+
+######################################################################################
+#hadoop 설정
+
+# 원복설정파일 복사
+docker exec hadoop1 /bin/bash -c "cp /root/$HADOOP_DIR_NAME/etc/hadoop/core-site.xml /root/$HADOOP_DIR_NAME/etc/hadoop/core-site.xml_ori"
+docker exec hadoop1 /bin/bash -c "cp /root/$HADOOP_DIR_NAME/etc/hadoop/hdfs-site.xml /root/$HADOOP_DIR_NAME/etc/hadoop/hdfs-site.xml_ori"
+docker exec hadoop1 /bin/bash -c "cp /root/$HADOOP_DIR_NAME/etc/hadoop/hadoop-env.sh /root/$HADOOP_DIR_NAME/etc/hadoop/hadoop-env.sh_ori"
+
+
+# 설정파일 복사
+docker cp  ./conf/hadoop/core-site.xml hadoop1:/root/$HADOOP_DIR_NAME/etc/hadoop
+docker cp  ./conf/hadoop/hdfs-site.xml hadoop1:/root/$HADOOP_DIR_NAME/etc/hadoop
+docker cp  ./conf/hadoop/masters hadoop1:/root/$HADOOP_DIR_NAME/etc/hadoop/masters
+docker cp  ./conf/hadoop/slaves hadoop1:/root/$HADOOP_DIR_NAME/etc/hadoop/slaves
+
+# user 정보 추가
+docker exec hadoop1 /bin/bash -c "echo '' >> /root/$HADOOP_DIR_NAME/etc/hadoop/hadoop-env.sh; \
+                               echo 'export HDFS_NAMENODE_USER=root' >> /root/$HADOOP_DIR_NAME/etc/hadoop/hadoop-env.sh; \
+                               echo 'export HDFS_DATANODE_USER=root' >> /root/$HADOOP_DIR_NAME/etc/hadoop/hadoop-env.sh; \
+                               echo 'export HDFS_SECONDARYNAMENODE_USER=root' >> /root/$HADOOP_DIR_NAME/etc/hadoop/hadoop-env.sh; \
+                               echo 'export YARN_RESOURCEMANAGER_USER=root' >> /root/$HADOOP_DIR_NAME/etc/hadoop/hadoop-env.sh; \
+                               echo 'export YARN_NODEMANAGER_USER=root' >> /root/$HADOOP_DIR_NAME/etc/hadoop/hadoop-env.sh;
+                              "
+
+# namenode 디렉토리 생성
+docker exec hes1 /bin/bash -c "mkdir -p /root/$HADOOP_DIR_NAME/data/hdfs/namenode"
+
+# archive and scp
+docker exec hadoop1 /bin/bash -c "tar -cvf $HADOOP_DIR_NAME.tar $HADOOP_DIR_NAME ; \
+                                  scp $HADOOP_DIR_NAME.tar hadoop2:/root; \
+                                  scp $HADOOP_DIR_NAME.tar hadoop3:/root; \
+                                  scp $HADOOP_DIR_NAME.tar hadoop4:/root; \
+                                  scp $HADOOP_DIR_NAME.tar hadoop5:/root; "
+
+# 압축해제 및 tar 파일 삭제
+docker exec hadoop1 /bin/bash -c "tar -xvf $HADOOP_DIR_NAME.tar; \
+                                  rm -rf $HADOOP_DIR_NAME.tar; "
+docker exec hadoop2 /bin/bash -c "tar -xvf $HADOOP_DIR_NAME.tar; \
+                                  rm -rf $HADOOP_DIR_NAME.tar; "
+docker exec hadoop3 /bin/bash -c "tar -xvf $HADOOP_DIR_NAME.tar; \
+                                  rm -rf $HADOOP_DIR_NAME.tar; "
+docker exec hadoop4 /bin/bash -c "tar -xvf $HADOOP_DIR_NAME.tar; \
+                                  rm -rf $HADOOP_DIR_NAME.tar; "
+docker exec hadoop5 /bin/bash -c "tar -xvf $HADOOP_DIR_NAME.tar; \
+                                  rm -rf $HADOOP_DIR_NAME.tar; "                                                                                                                                        
