@@ -19,3 +19,11 @@ docker build -t hadoop:1 . -f ./Dockerfile_test;
 ```shell
 docker compose up -d;
 ```
+
+
+## install and run
+
+```shell
+./1_install.sh;
+./2_run.sh;
+```
