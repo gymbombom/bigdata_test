@@ -3,6 +3,7 @@
 ######################################################################################
 #define
 LOGSTASH_DIR_NAME="logstash-8.6.0"
+KAFKA_DIR_NAME="kafka_2.13-3.3.1"
 
 ######################################################################################
 #sshd 설정
@@ -90,7 +91,7 @@ docker exec hadoop5 /bin/bash -c "echo '' >> /etc/hosts; \
 
 ######################################################################################                               
 # logstash 설정
-docker cp  ./conf/logstash/logstash.conf hadoop1:/root/logstash-8.6.0/config
+docker cp  ./conf/logstash/logstash.conf hadoop1:/root/$LOGSTASH_DIR_NAME/config
 
 # archive and scp
 docker exec hadoop1 /bin/bash -c "tar -cvf $LOGSTASH_DIR_NAME.tar $LOGSTASH_DIR_NAME ; \
@@ -99,7 +100,7 @@ docker exec hadoop1 /bin/bash -c "tar -cvf $LOGSTASH_DIR_NAME.tar $LOGSTASH_DIR_
                                   scp $LOGSTASH_DIR_NAME.tar hadoop4:/root; \
                                   scp $LOGSTASH_DIR_NAME.tar hadoop5:/root; "
 
-
+# 압축해제 및 tar 파일 삭제
 docker exec hadoop1 /bin/bash -c "tar -xvf $LOGSTASH_DIR_NAME.tar; \
                                   rm -rf $LOGSTASH_DIR_NAME.tar; "
 docker exec hadoop2 /bin/bash -c "tar -xvf $LOGSTASH_DIR_NAME.tar; \
@@ -112,3 +113,62 @@ docker exec hadoop5 /bin/bash -c "tar -xvf $LOGSTASH_DIR_NAME.tar; \
                                   rm -rf $LOGSTASH_DIR_NAME.tar;"
 
 ######################################################################################
+#kafka 설정
+
+#kafka data directory create
+docker exec hadoop1  mkdir -p /root/$KAFKA_DIR_NAME/data/zookeeper
+
+# 원복설정파일 복사
+docker exec hadoop1 /bin/bash -c "cp /root/$KAFKA_DIR_NAME/config/zookeeper.properties /root/$KAFKA_DIR_NAME/config/zookeeper.properties_ori"
+docker exec hadoop1 /bin/bash -c "cp /root/$KAFKA_DIR_NAME/config/server.properties /root/$KAFKA_DIR_NAME/config/server.properties_ori"
+
+# zookeeper.properties 파일 설정
+docker exec hadoop1 sed -i "/dataDir=/ c\dataDir=/root/$KAFKA_DIR_NAME/data/zookeeper" /root/$KAFKA_DIR_NAME/config/zookeeper.properties
+
+docker exec hadoop1 /bin/bash -c "echo '' >> /root/$KAFKA_DIR_NAME/config/zookeeper.properties; \
+                               echo 'tickTime=2000' >> /root/$KAFKA_DIR_NAME/config/zookeeper.properties; \
+                               echo 'initLimit=10' >> /root/$KAFKA_DIR_NAME/config/zookeeper.properties; \
+                               echo 'syncLimit=5'  >> /root/$KAFKA_DIR_NAME/config/zookeeper.properties;"
+
+docker exec hadoop1 /bin/bash -c "echo '' >> /root/$KAFKA_DIR_NAME/config/zookeeper.properties; \
+                               echo 'server.1=192.168.101.11:2888:3888' >> /root/$KAFKA_DIR_NAME/config/zookeeper.properties; \
+                               echo 'server.2=192.168.101.12:2888:3888' >> /root/$KAFKA_DIR_NAME/config/zookeeper.properties; \
+                               echo 'server.3=192.168.101.13:2888:3888' >> /root/$KAFKA_DIR_NAME/config/zookeeper.properties; \
+                               echo 'server.4=192.168.101.14:2888:3888' >> /root/$KAFKA_DIR_NAME/config/zookeeper.properties; \                                                             
+                               echo 'server.5=192.168.101.15:2888:3888' >> /root/$KAFKA_DIR_NAME/config/zookeeper.properties;"
+
+# server.properties 파일 설정
+docker exec hadoop1 /bin/bash -c "sed -i '/log.dirs=/ c\log.dirs=/root/$KAFKA_DIR_NAME/data/kafka/kafka-logs' /root/$KAFKA_DIR_NAME/config/server.properties; \
+                               sed -i '/zookeeper.connect=/ c\zookeeper.connect=192.168.101.11:2181,192.168.101.12:2181,192.168.101.13:2181,192.168.101.14:2181,192.168.101.15:2181' /root/$KAFKA_DIR_NAME/config/server.properties;"
+
+# archive and scp
+docker exec hadoop1 /bin/bash -c "tar -cvf $KAFKA_DIR_NAME.tar $KAFKA_DIR_NAME ; \
+                                  scp $KAFKA_DIR_NAME.tar hadoop2:/root; \
+                                  scp $KAFKA_DIR_NAME.tar hadoop3:/root; \
+                                  scp $KAFKA_DIR_NAME.tar hadoop4:/root; \
+                                  scp $KAFKA_DIR_NAME.tar hadoop5:/root; "
+
+# 압축해제 및 tar 파일 삭제
+docker exec hadoop1 /bin/bash -c "tar -xvf $KAFKA_DIR_NAME.tar; \
+                                  rm -rf $KAFKA_DIR_NAME.tar; "
+docker exec hadoop2 /bin/bash -c "tar -xvf $KAFKA_DIR_NAME.tar; \
+                                  rm -rf $KAFKA_DIR_NAME.tar; "
+docker exec hadoop3 /bin/bash -c "tar -xvf $KAFKA_DIR_NAME.tar; \
+                                  rm -rf $KAFKA_DIR_NAME.tar; "
+docker exec hadoop4 /bin/bash -c "tar -xvf $KAFKA_DIR_NAME.tar; \
+                                  rm -rf $KAFKA_DIR_NAME.tar; "
+docker exec hadoop5 /bin/bash -c "tar -xvf $KAFKA_DIR_NAME.tar; \
+                                  rm -rf $KAFKA_DIR_NAME.tar; "
+
+# 개별설정
+docker exec hadoop1 sed -i "/broker.id=/ c\broker.id=1" /root/$KAFKA_DIR_NAME/config/server.properties
+docker exec hadoop2 sed -i "/broker.id=/ c\broker.id=2" /root/$KAFKA_DIR_NAME/config/server.properties
+docker exec hadoop3 sed -i "/broker.id=/ c\broker.id=3" /root/$KAFKA_DIR_NAME/config/server.properties
+docker exec hadoop4 sed -i "/broker.id=/ c\broker.id=4" /root/$KAFKA_DIR_NAME/config/server.properties
+docker exec hadoop5 sed -i "/broker.id=/ c\broker.id=5" /root/$KAFKA_DIR_NAME/config/server.properties
+
+docker exec hadoop1 /bin/bash -c "echo 1 > /root/$KAFKA_DIR_NAME/data/zookeeper/myid;"
+docker exec hadoop2 /bin/bash -c "echo 2 > /root/$KAFKA_DIR_NAME/data/zookeeper/myid;"
+docker exec hadoop3 /bin/bash -c "echo 3 > /root/$KAFKA_DIR_NAME/data/zookeeper/myid;"
+docker exec hadoop4 /bin/bash -c "echo 4 > /root/$KAFKA_DIR_NAME/data/zookeeper/myid;"
+docker exec hadoop5 /bin/bash -c "echo 5 > /root/$KAFKA_DIR_NAME/data/zookeeper/myid;"
