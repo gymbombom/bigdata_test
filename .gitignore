@@ -1,2 +1,3 @@
 package/
 Dockerfile_test
+test.sh
