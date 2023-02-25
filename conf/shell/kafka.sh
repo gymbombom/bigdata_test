@@ -6,7 +6,7 @@ CONNECT_STRING="hadoop1:9092,hadoop2:9092,hadoop3:9092,hadoop4:9092,hadoop5:9092
 
 case "$1" in
       start)
-            /bin/echo "starting KAFKA"
+             /bin/echo "starting KAFKA"
              $KAFKA_HOME/bin/zookeeper-server-start.sh -daemon $KAFKA_HOME/config/zookeeper.properties
              sleep 10
              $KAFKA_HOME/bin/kafka-server-start.sh -daemon $KAFKA_HOME/config/server.properties
@@ -14,9 +14,9 @@ case "$1" in
       stop)
              /bin/echo "stopping KAFKA"
              /bin/echo ""
-	         $KAFKA_HOME/bin/kafka-server-stop.sh
+             $KAFKA_HOME/bin/kafka-server-stop.sh
              sleep 10
-             $KAFKA_HOME/bin/zookeeper-server-stop.sh            
+             $KAFKA_HOME/bin/zookeeper-server-stop.sh
              ;;
       list)
              /bin/echo  "kafka Topic list"
