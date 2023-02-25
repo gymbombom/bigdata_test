@@ -114,6 +114,28 @@ docker exec hadoop5 /bin/bash -c "echo '' >> /etc/hosts; \
                                echo '192.168.101.13  hadoop3' >> /etc/hosts; \
                                echo '192.168.101.14  hadoop4' >> /etc/hosts; \
                                echo '192.168.101.15  hadoop5' >> /etc/hosts;"
+######################################################################################
+# shell 파일 복사
+docker cp  ./conf/shell hadoop1:/root/
+
+docker exec hadoop1 /bin/bash -c "chmod 755 -R /root/shell"
+
+docker exec hadoop1 /bin/bash -c "tar -cvf shell.tar shell ; \
+                                  scp shell.tar hadoop2:/root; \
+                                  scp shell.tar hadoop3:/root; \
+                                  scp shell.tar hadoop4:/root; \
+                                  scp shell.tar hadoop5:/root; "
+
+docker exec hadoop1 /bin/bash -c "tar -xvf shell.tar; \
+                                  rm -rf shell.tar; "
+docker exec hadoop2 /bin/bash -c "tar -xvf shell.tar; \
+                                  rm -rf shell.tar; "
+docker exec hadoop3 /bin/bash -c "tar -xvf shell.tar; \
+                                  rm -rf shell.tar; "
+docker exec hadoop4 /bin/bash -c "tar -xvf shell.tar; \
+                                  rm -rf shell.tar; "
+docker exec hadoop5 /bin/bash -c "tar -xvf shell.tar; \
+                                  rm -rf shell.tar; "                                                                                                      
 
 ######################################################################################                               
 # logstash 설정
@@ -144,7 +166,7 @@ docker exec hadoop5 /bin/bash -c "tar -xvf $LOGSTASH_DIR_NAME.tar; \
 #kafka data directory create
 docker exec hadoop1  mkdir -p /root/$KAFKA_DIR_NAME/data/zookeeper
 
-# 원복설정파일 복사
+# 원본설정파일 복사
 docker exec hadoop1 /bin/bash -c "cp /root/$KAFKA_DIR_NAME/config/zookeeper.properties /root/$KAFKA_DIR_NAME/config/zookeeper.properties_ori"
 docker exec hadoop1 /bin/bash -c "cp /root/$KAFKA_DIR_NAME/config/server.properties /root/$KAFKA_DIR_NAME/config/server.properties_ori"
 
@@ -165,7 +187,7 @@ docker exec hadoop1 /bin/bash -c "echo '' >> /root/$KAFKA_DIR_NAME/config/zookee
 
 # server.properties 파일 설정
 docker exec hadoop1 /bin/bash -c "sed -i '/log.dirs=/ c\log.dirs=/root/$KAFKA_DIR_NAME/data/kafka/kafka-logs' /root/$KAFKA_DIR_NAME/config/server.properties; \
-                               sed -i '/zookeeper.connect=/ c\zookeeper.connect=192.168.101.11:2181,192.168.101.12:2181,192.168.101.13:2181,192.168.101.14:2181,192.168.101.15:2181' /root/$KAFKA_DIR_NAME/config/server.properties;"
+                               sed -i '/zookeeper.connect=/ c\zookeeper.connect=192.168.101.11:2181,192.168.101.12:2181,192.168.101.13:2181,192.168.101.14:2181,192.168.101.15:2181' /root/$KAFKA_DIR_NAME/config/server.properties; "
 
 # archive and scp
 docker exec hadoop1 /bin/bash -c "tar -cvf $KAFKA_DIR_NAME.tar $KAFKA_DIR_NAME ; \
