@@ -4,6 +4,8 @@ MAINTAINER gymbombom <gymbombom@kakao.com>
 ######################################################################################################################################
 # ARM
 ARG JDK_ARCHIVE_FILE="openjdk-17.0.2_linux-aarch64_bin.tar.gz"
+ARG JDK_ARCHIVE_FILE_11="zulu11.62.17-ca-jdk11.0.18-linux_aarch64.tar.gz"
+ARG JDK_FILE_11="zulu11.62.17-ca-jdk11.0.18"
 ARG LOGSTASH_ARCHIVE_FILE="logstash-8.6.2-linux-aarch64.tar.gz"
 ARG KAFKA_ARCHIVE_FILE="kafka_2.13-3.4.0.tgz"
 ARG HADOOP_ARCHIVE_FILE="hadoop-3.3.4.tar.gz"
@@ -16,14 +18,17 @@ RUN echo "root:root" | chpasswd; \
     yum install sshpass -y; \
     yum install which -y; \
     wget https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-aarch64_bin.tar.gz; \
+    wget https://cdn.azul.com/zulu-embedded/bin/zulu11.62.17-ca-jdk11.0.18-linux_aarch64.tar.gz; \
     wget https://artifacts.elastic.co/downloads/logstash/logstash-8.6.2-linux-aarch64.tar.gz; \
     wget https://downloads.apache.org/kafka/3.4.0/kafka_2.13-3.4.0.tgz; \
     wget --no-check-certificate https://dlcdn.apache.org/hadoop/common/hadoop-3.3.4/hadoop-3.3.4.tar.gz; \
     tar -xvf ${JDK_ARCHIVE_FILE}; \
+    mkdir ./${JDK_FILE_11} ; tar -xvf  ${JDK_ARCHIVE_FILE_11} -C ./${JDK_FILE_11} --strip-components 1; \
     tar -xvf ${LOGSTASH_ARCHIVE_FILE}; \
     tar -xvf ${KAFKA_ARCHIVE_FILE}; \
     tar -xvf ${HADOOP_ARCHIVE_FILE}; \
     rm -rf ${JDK_ARCHIVE_FILE}; \
+    rm -rf ${JDK_ARCHIVE_FILE_11}; \
     rm -rf ${LOGSTASH_ARCHIVE_FILE}; \
     rm -rf ${KAFKA_ARCHIVE_FILE}; \
     rm -rf ${HADOOP_ARCHIVE_FILE}; \ 

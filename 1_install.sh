@@ -2,6 +2,7 @@
 
 ######################################################################################
 #define
+JDK_DIR_NAME_11="zulu11.62.17-ca-jdk11.0.18"
 LOGSTASH_DIR_NAME="logstash-8.6.2"
 KAFKA_DIR_NAME="kafka_2.13-3.4.0"
 HADOOP_DIR_NAME="hadoop-3.3.4"
@@ -224,20 +225,25 @@ docker exec hadoop5 /bin/bash -c "echo 5 > /root/$KAFKA_DIR_NAME/data/zookeeper/
 ######################################################################################
 #hadoop 설정
 
-# 원복설정파일 복사
+# 원본설정파일 복사
 docker exec hadoop1 /bin/bash -c "cp /root/$HADOOP_DIR_NAME/etc/hadoop/core-site.xml /root/$HADOOP_DIR_NAME/etc/hadoop/core-site.xml_ori"
 docker exec hadoop1 /bin/bash -c "cp /root/$HADOOP_DIR_NAME/etc/hadoop/hdfs-site.xml /root/$HADOOP_DIR_NAME/etc/hadoop/hdfs-site.xml_ori"
+docker exec hadoop1 /bin/bash -c "cp /root/$HADOOP_DIR_NAME/etc/hadoop/mapred-site.xml /root/$HADOOP_DIR_NAME/etc/hadoop/mapred-site.xml_ori"
+docker exec hadoop1 /bin/bash -c "cp /root/$HADOOP_DIR_NAME/etc/hadoop/yarn-site.xml /root/$HADOOP_DIR_NAME/etc/hadoop/yarn-site.xml_ori"
 docker exec hadoop1 /bin/bash -c "cp /root/$HADOOP_DIR_NAME/etc/hadoop/hadoop-env.sh /root/$HADOOP_DIR_NAME/etc/hadoop/hadoop-env.sh_ori"
 
 
 # 설정파일 복사
 docker cp  ./conf/hadoop/core-site.xml hadoop1:/root/$HADOOP_DIR_NAME/etc/hadoop
 docker cp  ./conf/hadoop/hdfs-site.xml hadoop1:/root/$HADOOP_DIR_NAME/etc/hadoop
+docker cp  ./conf/hadoop/mapred-site.xml hadoop1:/root/$HADOOP_DIR_NAME/etc/hadoop
+docker cp  ./conf/hadoop/yarn-site.xml hadoop1:/root/$HADOOP_DIR_NAME/etc/hadoop
 docker cp  ./conf/hadoop/masters hadoop1:/root/$HADOOP_DIR_NAME/etc/hadoop/masters
 docker cp  ./conf/hadoop/slaves hadoop1:/root/$HADOOP_DIR_NAME/etc/hadoop/slaves
 
 # user 정보 추가
 docker exec hadoop1 /bin/bash -c "echo '' >> /root/$HADOOP_DIR_NAME/etc/hadoop/hadoop-env.sh; \
+                               echo 'export JAVA_HOME=/root/$JDK_DIR_NAME_11' >> /root/$HADOOP_DIR_NAME/etc/hadoop/hadoop-env.sh; \
                                echo 'export HDFS_NAMENODE_USER=root' >> /root/$HADOOP_DIR_NAME/etc/hadoop/hadoop-env.sh; \
                                echo 'export HDFS_DATANODE_USER=root' >> /root/$HADOOP_DIR_NAME/etc/hadoop/hadoop-env.sh; \
                                echo 'export HDFS_SECONDARYNAMENODE_USER=root' >> /root/$HADOOP_DIR_NAME/etc/hadoop/hadoop-env.sh; \
