@@ -4,6 +4,7 @@ services:
     hadoop1:
         container_name: hadoop1     
         image: hadoop:1
+        hostname: hadoop1
         stdin_open: true
         tty: true
         privileged: true
@@ -17,6 +18,7 @@ services:
     hadoop2:
         container_name: hadoop2       
         image: hadoop:1
+        hostname: hadoop2
         stdin_open: true
         tty: true
         privileged: true
@@ -27,6 +29,7 @@ services:
     hadoop3:
         container_name: hadoop3       
         image: hadoop:1
+        hostname: hadoop3
         stdin_open: true
         tty: true
         privileged: true
@@ -37,6 +40,7 @@ services:
     hadoop4:
         container_name: hadoop4       
         image: hadoop:1
+        hostname: hadoop4
         stdin_open: true
         tty: true
         privileged: true
@@ -47,6 +51,7 @@ services:
     hadoop5:
         container_name: hadoop5       
         image: hadoop:1
+        hostname: hadoop5
         stdin_open: true
         tty: true
         privileged: true
