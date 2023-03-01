@@ -6,6 +6,7 @@ JDK_DIR_NAME_11="zulu11.62.17-ca-jdk11.0.18"
 LOGSTASH_DIR_NAME="logstash-8.6.2"
 KAFKA_DIR_NAME="kafka_2.13-3.4.0"
 HADOOP_DIR_NAME="hadoop-3.3.4"
+ES_DIR_NAME="elasticsearch-8.6.2"
 
 ######################################################################################
 #sshd 설정
@@ -271,4 +272,68 @@ docker exec hadoop3 /bin/bash -c "tar -xvf $HADOOP_DIR_NAME.tar; \
 docker exec hadoop4 /bin/bash -c "tar -xvf $HADOOP_DIR_NAME.tar; \
                                   rm -rf $HADOOP_DIR_NAME.tar; "
 docker exec hadoop5 /bin/bash -c "tar -xvf $HADOOP_DIR_NAME.tar; \
-                                  rm -rf $HADOOP_DIR_NAME.tar; "                                                                                                                                        
+                                  rm -rf $HADOOP_DIR_NAME.tar; "    
+
+######################################################################################
+# elasticsearch
+
+#원본파일복사
+docker exec hadoop1 /bin/bash -c "cp /root/$ES_DIR_NAME/config/elasticsearch.yml /root/$ES_DIR_NAME/config/elasticsearch.yml_ori"
+docker exec hadoop1 /bin/bash -c "cp /root/$ES_DIR_NAME/config/jvm.options /root/$ES_DIR_NAME/config/jvm.options_ori"
+
+# 설정파일 복사
+docker cp  ./conf/elasticsearch/elasticsearch.yml hadoop1:/root/$ES_DIR_NAME/config
+docker cp  ./conf/elasticsearch/jvm.options hadoop1:/root/$ES_DIR_NAME/config
+
+# archive and scp
+docker exec hadoop1 /bin/bash -c "tar -cvf $ES_DIR_NAME.tar $ES_DIR_NAME ; \
+                                  scp $ES_DIR_NAME.tar hadoop2:/root; \
+                                  scp $ES_DIR_NAME.tar hadoop3:/root; \
+                                  scp $ES_DIR_NAME.tar hadoop4:/root; \
+                                  scp $ES_DIR_NAME.tar hadoop5:/root; "
+
+
+#user add 및 파일 move 압축해제 , tar 파일삭제 , owner 및 권한변경
+docker exec hadoop1 /bin/bash -c "useradd es; \
+                                  echo es:es | chpasswd; \
+                                  mv /root/$ES_DIR_NAME.tar /home/es; \
+                                  cd /home/es; tar -xvf $ES_DIR_NAME.tar; \
+                                  rm -rf /home/es/$ES_DIR_NAME.tar; \
+                                  chown -R es:es /home/es/$ES_DIR_NAME; \
+                                  chmod -R 775 /home/es/$ES_DIR_NAME;
+                                  "
+docker exec hadoop2 /bin/bash -c "useradd es; \
+                                  echo es:es | chpasswd; \
+                                  mv /root/$ES_DIR_NAME.tar /home/es; \
+                                  cd /home/es; tar -xvf $ES_DIR_NAME.tar; \
+                                  rm -rf /home/es/$ES_DIR_NAME.tar; \
+                                  chown -R es:es /home/es/$ES_DIR_NAME; \
+                                  chmod -R 775 /home/es/$ES_DIR_NAME;
+                                  "
+docker exec hadoop3 /bin/bash -c "useradd es; \
+                                  echo es:es | chpasswd; \
+                                  mv /root/$ES_DIR_NAME.tar /home/es; \
+                                  cd /home/es; tar -xvf $ES_DIR_NAME.tar; \
+                                  rm -rf /home/es/$ES_DIR_NAME.tar; \
+                                  chown -R es:es /home/es/$ES_DIR_NAME; \
+                                  chmod -R 775 /home/es/$ES_DIR_NAME;
+                                  "
+docker exec hadoop4 /bin/bash -c "useradd es; \
+                                  echo es:es | chpasswd; \
+                                  mv /root/$ES_DIR_NAME.tar /home/es; \
+                                  cd /home/es; tar -xvf $ES_DIR_NAME.tar; \
+                                  rm -rf /home/es/$ES_DIR_NAME.tar; \
+                                  chown -R es:es /home/es/$ES_DIR_NAME; \
+                                  chmod -R 775 /home/es/$ES_DIR_NAME;
+                                  "
+docker exec hadoop5 /bin/bash -c "useradd es; \
+                                  echo es:es | chpasswd; \
+                                  mv /root/$ES_DIR_NAME.tar /home/es; \
+                                  cd /home/es; tar -xvf $ES_DIR_NAME.tar; \
+                                  rm -rf /home/es/$ES_DIR_NAME.tar; \
+                                  chown -R es:es /home/es/$ES_DIR_NAME; \
+                                  chmod -R 775 /home/es/$ES_DIR_NAME;
+                                  "                                                                                                                                                                                                                                          
+
+
+######################################################################################

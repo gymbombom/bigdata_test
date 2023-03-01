@@ -5,6 +5,7 @@
 LOGSTASH_DIR_NAME="logstash-8.6.2"
 KAFKA_DIR_NAME="kafka_2.13-3.4.0"
 HADOOP_DIR_NAME="hadoop-3.3.4"
+ES_DIR_NAME="elasticsearch-8.6.2"
 
 ######################################################################################
 # logstash
@@ -44,3 +45,19 @@ docker exec hadoop2 /bin/bash -c "source /root/.bashrc; /root/$HADOOP_DIR_NAME/s
 docker exec hadoop3 /bin/bash -c "source /root/.bashrc; /root/$HADOOP_DIR_NAME/sbin/start-all.sh;"
 docker exec hadoop4 /bin/bash -c "source /root/.bashrc; /root/$HADOOP_DIR_NAME/sbin/start-all.sh;"
 docker exec hadoop5 /bin/bash -c "source /root/.bashrc; /root/$HADOOP_DIR_NAME/sbin/start-all.sh;"
+
+######################################################################################
+# elasticsearch
+
+docker exec hadoop1 /bin/bash -c "sudo -u es /home/es/$ES_DIR_NAME/bin/elasticsearch -d;"
+docker exec hadoop2 /bin/bash -c "sudo -u es /home/es/$ES_DIR_NAME/bin/elasticsearch -d;"
+docker exec hadoop3 /bin/bash -c "sudo -u es /home/es/$ES_DIR_NAME/bin/elasticsearch -d;"
+docker exec hadoop4 /bin/bash -c "sudo -u es /home/es/$ES_DIR_NAME/bin/elasticsearch -d;"
+docker exec hadoop5 /bin/bash -c "sudo -u es /home/es/$ES_DIR_NAME/bin/elasticsearch -d;"
+
+
+docker exec hadoop1 /bin/bash -c "curl hadoop1:9200/_cat/health?v"
+docker exec hadoop2 /bin/bash -c "curl hadoop2:9200/_cat/health?v"
+docker exec hadoop3 /bin/bash -c "curl hadoop3:9200/_cat/health?v"
+docker exec hadoop4 /bin/bash -c "curl hadoop4:9200/_cat/health?v"
+docker exec hadoop5 /bin/bash -c "curl hadoop5:9200/_cat/health?v"

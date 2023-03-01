@@ -19,6 +19,7 @@ RUN echo "root:root" | chpasswd; \
     yum install openssh-server openssh-clients openssh-askpass -y; \
     yum install sshpass -y; \
     yum install which -y; \
+    yum install sudo -y; \
     wget https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz; \
     wget https://cdn.azul.com/zulu/bin/zulu11.62.17-ca-jdk11.0.18-linux_x64.tar.gz; \
     wget https://artifacts.elastic.co/downloads/logstash/logstash-8.6.2-linux-x86_64.tar.gz; \
